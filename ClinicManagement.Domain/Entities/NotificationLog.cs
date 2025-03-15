@@ -15,17 +15,17 @@ namespace ClinicManagement.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string NotificationType { get; set; } // Email, SMS, Push
+        public string? NotificationType { get; set; } // Email, SMS, Push
 
         [Required]
-        public string Message { get; set; } // Nội dung thông báo
+        public string? Message { get; set; } // Nội dung thông báo
 
         public DateTime SentAt { get; set; } = DateTime.UtcNow;
 
         [Required]
         [MaxLength(50)]
-        public string Status { get; set; } // Success, Failed
+        public string? Status { get; set; } // Success, Failed
 
-        public string ErrorMessage { get; set; } // Lưu lỗi nếu có
+        public string? ErrorMessage { get; set; } // Lưu lỗi nếu có
     }
 }

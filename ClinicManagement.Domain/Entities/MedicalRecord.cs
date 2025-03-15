@@ -14,9 +14,9 @@ namespace ClinicManagement.Domain.Entities
         public int AppointmentId { get; set; } // Liên kết với lịch hẹn
 
         [Required]
-        public string Diagnosis { get; set; } // Chẩn đoán bệnh
+        public string? Diagnosis { get; set; } // Chẩn đoán bệnh
 
-        public string TreatmentPlan { get; set; } // Kế hoạch điều trị
+        public string? TreatmentPlan { get; set; } // Kế hoạch điều trị
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

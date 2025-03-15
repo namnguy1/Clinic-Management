@@ -14,7 +14,7 @@ namespace ClinicManagement.Domain.Entities
         public int AppointmentId { get; set; } // Liên kết với cuộc hẹn
 
         [Required]
-        public string MedicationDetails { get; set; } // Chi tiết thuốc, liều lượng
+        public string? MedicationDetails { get; set; } // Chi tiết thuốc, liều lượng
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

@@ -15,10 +15,10 @@ namespace ClinicManagement.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string InvoiceNumber { get; set; } // Số hóa đơn
+        public string? InvoiceNumber { get; set; } // Số hóa đơn
 
         public DateTime IssuedDate { get; set; } = DateTime.UtcNow;
 
-        public string InvoiceDetails { get; set; } // Nội dung hóa đơn
+        public string? InvoiceDetails { get; set; } // Nội dung hóa đơn
     }
 }

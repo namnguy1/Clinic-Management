@@ -36,12 +36,22 @@ namespace ClinicManagement.Infrastructure.Repositories
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                throw new InvalidOperationException($"User with email {email} not found.");
+            }
+            return user;
         }
 
         public async Task<User> GetByIdAsync(int userId)
         {
-            return await _context.Users.FindAsync(userId);
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                throw new InvalidOperationException($"User with ID {userId} not found.");
+            }
+            return user;
         }
 
         public async Task UpdateAsync(User user)

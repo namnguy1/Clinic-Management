@@ -19,6 +19,7 @@
     <ProjectReference Include="..\ClinicManagement.Application\ClinicManagement.Application.csproj" />
     <ProjectReference Include="..\ClinicManagement.Domain\ClinicManagement.Domain.csproj" />
     <ProjectReference Include="..\ClinicManagement.Infrastructure\ClinicManagement.Infrastructure.csproj" />
+    <ProjectReference Include="..\ClinicManagement.DTOs\ClinicManagement.DTOs.csproj" />
   </ItemGroup>
 
 </Project>

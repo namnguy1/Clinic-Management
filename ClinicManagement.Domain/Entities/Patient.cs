@@ -17,17 +17,17 @@ namespace ClinicManagement.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string InsuranceNumber { get; set; } // Số bảo hiểm y tế (nếu có)
+        public string? InsuranceNumber { get; set; } // Số bảo hiểm y tế (nếu có)
 
         public DateTime DateOfBirth { get; set; } // Ngày sinh
 
         [Required]
         [MaxLength(10)]
-        public string Gender { get; set; } // Male, Female, Other
+        public string? Gender { get; set; } // Male, Female, Other
 
         [MaxLength(255)]
-        public string Address { get; set; } // Địa chỉ của bệnh nhân
+        public string? Address { get; set; } // Địa chỉ của bệnh nhân
 
-        public User User { get; set; } // Navigation property
+        public User? User { get; set; } // Navigation property
     }
 }

@@ -15,16 +15,16 @@ namespace ClinicManagement.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string PaymentMethod { get; set; } // Stripe, PayPal, VNPay
+        public string? PaymentMethod { get; set; } // Stripe, PayPal, VNPay
 
         [Required]
         public decimal Amount { get; set; } // Số tiền thanh toán
 
         [Required]
         [MaxLength(50)]
-        public string PaymentStatus { get; set; } // Pending, Completed, Failed
+        public string? PaymentStatus { get; set; } // Pending, Completed, Failed
 
-        public string TransactionId { get; set; } // Mã giao dịch từ cổng thanh toán
+        public string? TransactionId { get; set; } // Mã giao dịch từ cổng thanh toán
 
         public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
     }

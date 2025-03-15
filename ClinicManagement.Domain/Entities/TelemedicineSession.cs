@@ -18,11 +18,11 @@ namespace ClinicManagement.Domain.Entities
 
         [Required]
         [MaxLength(500)]
-        public string SessionUrl { get; set; } // URL cuộc gọi video
+        public string? SessionUrl { get; set; } // URL cuộc gọi video
 
         [Required]
         [MaxLength(50)]
-        public string SessionStatus { get; set; } // scheduled, active, completed, cancelled
+        public string? SessionStatus { get; set; } // scheduled, active, completed, cancelled
 
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }

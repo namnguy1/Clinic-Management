@@ -17,15 +17,15 @@ namespace ClinicManagement.Domain.Entities
 
         [Required]
         [MaxLength(100)]
-        public string Specialization { get; set; } // Chuyên môn (Tim mạch, Nội tiết,...)
+        public string? Specialization { get; set; } // Chuyên môn (Tim mạch, Nội tiết,...)
 
         [Required]
         [MaxLength(20)]
-        public string LicenseNumber { get; set; } // Số giấy phép hành nghề
+        public string? LicenseNumber { get; set; } // Số giấy phép hành nghề
 
         [MaxLength(255)]
-        public string ClinicAddress { get; set; } // Địa chỉ phòng khám (nếu có)
+        public string? ClinicAddress { get; set; } // Địa chỉ phòng khám (nếu có)
 
-        public User User { get; set; } // Navigation property
+        public User? User { get; set; } // Navigation property
     }
 }

@@ -15,15 +15,15 @@ namespace ClinicManagement.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string Provider { get; set; } // "Google", "Outlook"
+        public string? Provider { get; set; } // "Google", "Outlook"
 
-        public string AccessToken { get; set; } // OAuth Token
+        public string? AccessToken { get; set; } // OAuth Token
 
-        public string RefreshToken { get; set; } // Dùng để lấy lại AccessToken khi hết hạn
+        public string? RefreshToken { get; set; } // Dùng để lấy lại AccessToken khi hết hạn
 
         public DateTime? ExpiresAt { get; set; } // Ngày hết hạn AccessToken
 
         [MaxLength(100)]
-        public string CalendarId { get; set; } // ID lịch của người dùng (nếu cần)
+        public string? CalendarId { get; set; } // ID lịch của người dùng (nếu cần)
     }
 }

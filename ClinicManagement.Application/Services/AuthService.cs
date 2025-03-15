@@ -28,7 +28,7 @@ namespace ClinicManagement.Application.Services
         public async Task<string> LoginAsync(string email, string password)
         {
             var user = await _userRepository.GetByEmailAsync(email);
-            if (user == null || !VerifyPassword(password, user.PasswordHash))
+            if (user == null || user.PasswordHash == null || !VerifyPassword(password, user.PasswordHash))
                 throw new Exception("Invalid credentials");
             // Tạo token JWT
             string token = GenerateToken(user);
