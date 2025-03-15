@@ -20,10 +20,26 @@ namespace ClinicManagement.Infrastructure.ClinicDbContexts
         public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<ExternalCalendar> ExternalCalendars { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
 
-        // protected override void OnModelCreating(ModelBuilder modelBuilder)
-        // {
-        //     base.OnModelCreating(modelBuilder);
-        // }   
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Thiết lập quan hệ 1-1 giữa User và Patient
+            modelBuilder.Entity<Patient>()
+                .HasOne(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Thiết lập quan hệ 1-1 giữa User và Doctor
+            modelBuilder.Entity<Doctor>()
+                .HasOne(d => d.User)
+                .WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
