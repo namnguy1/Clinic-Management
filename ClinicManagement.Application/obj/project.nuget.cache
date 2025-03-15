@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "TV8fNOhpvDw=",
+  "success": true,
+  "projectFilePath": "D:\\ClinicManagement\\ClinicManagement.Application\\ClinicManagement.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\LENOVO\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
+    "C:\\Users\\LENOVO\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.3\\microsoft.extensions.dependencyinjection.abstractions.9.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

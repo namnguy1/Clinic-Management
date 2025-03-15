@@ -1,0 +1,11 @@
+D:\ClinicManagement\ClinicManagement.Domain\obj\Debug\net9.0\ClinicManagement.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\ClinicManagement\ClinicManagement.Domain\obj\Debug\net9.0\ClinicManagement.Domain.AssemblyInfoInputs.cache
+D:\ClinicManagement\ClinicManagement.Domain\obj\Debug\net9.0\ClinicManagement.Domain.AssemblyInfo.cs
+D:\ClinicManagement\ClinicManagement.Domain\obj\Debug\net9.0\ClinicManagement.Domain.csproj.CoreCompileInputs.cache
+D:\ClinicManagement\ClinicManagement.Domain\bin\Debug\net9.0\ClinicManagement.Domain.deps.json
+D:\ClinicManagement\ClinicManagement.Domain\bin\Debug\net9.0\ClinicManagement.Domain.dll
+D:\ClinicManagement\ClinicManagement.Domain\bin\Debug\net9.0\ClinicManagement.Domain.pdb
+D:\ClinicManagement\ClinicManagement.Domain\obj\Debug\net9.0\ClinicManagement.Domain.dll
+D:\ClinicManagement\ClinicManagement.Domain\obj\Debug\net9.0\refint\ClinicManagement.Domain.dll
+D:\ClinicManagement\ClinicManagement.Domain\obj\Debug\net9.0\ClinicManagement.Domain.pdb
+D:\ClinicManagement\ClinicManagement.Domain\obj\Debug\net9.0\ref\ClinicManagement.Domain.dll
