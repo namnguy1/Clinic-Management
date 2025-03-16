@@ -2,9 +2,7 @@ using System.Threading.Tasks;
 using ClinicManagement.Application.Interfaces;
 using ClinicManagement.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using ClinicManagement.DTOs.Auth;
-
-
+using ClinicManagement.Application.Dtos.Auth;
 namespace ClinicManagement.API.Controllers
 {
     [ApiController]
@@ -19,9 +17,12 @@ namespace ClinicManagement.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest? request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto? request)
         {
-            if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+            // Kiểm tra null và các trường bắt buộc
+            if (request == null ||
+                string.IsNullOrEmpty(request.Email) ||
+                string.IsNullOrEmpty(request.Password))
             {
                 return BadRequest("Invalid request data.");
             }
@@ -30,16 +31,30 @@ namespace ClinicManagement.API.Controllers
             {
                 FullName = request.FullName,
                 Email = request.Email,
-                Role = request.Role,
+                Role = "Patient",
                 PhoneNumber = request.PhoneNumber
             };
 
+            // Gọi service để xử lý đăng ký
             var registeredUser = await _authService.RegisterAsync(user, request.Password);
-            return Ok(registeredUser);
+            
+            // Nếu service trả về null, có thể nghĩa là email đã tồn tại hoặc lỗi khác
+            if (registeredUser == null)
+            {
+                return BadRequest("Registration failed. Email might be already in use.");
+            }
+            var response = new RegisterResponseDto
+            {
+                FullName = registeredUser.FullName,
+                Email = registeredUser.Email,
+                PhoneNumber = registeredUser.PhoneNumber
+            };
+            // Trả về RegisterResponse
+            return Ok(response);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest? request)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto? request)
         {
             if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
             {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClinicManagement.DTOs.Auth
+namespace ClinicManagement.Application.Dtos.Auth
 {
-    public class RegisterRequest
+    public class RegisterRequestDto
     {
         [Required]
         public string? FullName { get; set; }
@@ -17,7 +17,6 @@ namespace ClinicManagement.DTOs.Auth
         [Required, MinLength(6)]
         public string? Password { get; set; }
 
-        public string? Role { get; set; }
         public string? PhoneNumber { get; set; }
     }
 }
