@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ClinicManagement.Domain.Enums;
 
 namespace ClinicManagement.Domain.Entities
 {
@@ -14,8 +16,7 @@ namespace ClinicManagement.Domain.Entities
         public int? UserId { get; set; } // Người nhận thông báo
 
         [Required]
-        [MaxLength(50)]
-        public string? NotificationType { get; set; } // Email, SMS, Push
+        public NotificationTypeEnum NotificationType { get; set; }
 
         [Required]
         public string? Message { get; set; } // Nội dung thông báo
@@ -23,9 +24,11 @@ namespace ClinicManagement.Domain.Entities
         public DateTime SentAt { get; set; } = DateTime.UtcNow;
 
         [Required]
-        [MaxLength(50)]
-        public string? Status { get; set; } // Success, Failed
+        public NotificationStatusEnum Status { get; set; }
 
+        [MaxLength(500)]
         public string? ErrorMessage { get; set; } // Lưu lỗi nếu có
+
+        public User? User { get; set; }
     }
 }

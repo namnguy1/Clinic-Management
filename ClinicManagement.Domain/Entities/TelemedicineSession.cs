@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ClinicManagement.Domain.Enums;
 
 namespace ClinicManagement.Domain.Entities
 {
@@ -11,10 +13,14 @@ namespace ClinicManagement.Domain.Entities
         [Key]
         public int SessionId { get; set; }
 
-        public int AppointmentId { get; set; } // Liên kết với lịch hẹn
+        public int AppointmentId { get; set; }
+        public Appointment? Appointment { get; set; }
 
         public int DoctorId { get; set; }
+        public Doctor? Doctor { get; set; }
+
         public int PatientId { get; set; }
+        public Patient? Patient { get; set; }
 
         [Required]
         [MaxLength(500)]
@@ -22,7 +28,7 @@ namespace ClinicManagement.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string? SessionStatus { get; set; } // scheduled, active, completed, cancelled
+        public TelemedicineSessionStatus? SessionStatus { get; set; } // scheduled, active, completed, cancelled
 
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }

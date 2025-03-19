@@ -25,21 +25,59 @@ namespace ClinicManagement.Infrastructure.ClinicDbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            // User - Doctor (1-1)
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Doctor)
+                .WithOne(d => d.User)
+                .HasForeignKey<Doctor>(d => d.UserId);
 
-            // Thiết lập quan hệ 1-1 giữa User và Patient
-            modelBuilder.Entity<Patient>()
-                .HasOne(p => p.User)
-                .WithMany()
-                .HasForeignKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+            // User - Patient (1-1)
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Patient)
+                .WithOne(p => p.User)
+                .HasForeignKey<Patient>(p => p.UserId);
 
-            // Thiết lập quan hệ 1-1 giữa User và Doctor
+            // Doctor - Appointment (1-N)
             modelBuilder.Entity<Doctor>()
-                .HasOne(d => d.User)
+                .HasMany(d => d.Appointments)
+                .WithOne(a => a.Doctor)
+                .HasForeignKey(a => a.DoctorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Patient - Appointment (1-N)
+            modelBuilder.Entity<Patient>()
+                .HasMany(p => p.Appointments)
+                .WithOne(a => a.Patient)
+                .HasForeignKey(a => a.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // MedicalRecord - Patient (1-N)
+            modelBuilder.Entity<MedicalRecord>()
+                .HasOne(m => m.Patient)
+                .WithMany(p => p.MedicalRecords)
+                .HasForeignKey(m => m.PatientId)
+                .OnDelete(DeleteBehavior.NoAction); // Tránh vòng lặp
+
+            // MedicalRecord - Doctor (1-N)
+            modelBuilder.Entity<MedicalRecord>()
+                .HasOne(m => m.Doctor)
+                .WithMany(d => d.MedicalRecords)
+                .HasForeignKey(m => m.DoctorId)
+                .OnDelete(DeleteBehavior.NoAction); // Tránh vòng lặp
+
+            // TelemedicineSession
+            modelBuilder.Entity<TelemedicineSession>()
+                .HasOne(t => t.Doctor)
                 .WithMany()
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(t => t.DoctorId);
+            // TelemedicineSession
+            modelBuilder.Entity<TelemedicineSession>()
+                .HasOne(t => t.Patient)
+                .WithMany()
+                .HasForeignKey(t => t.PatientId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -3,6 +3,7 @@ using ClinicManagement.Application.Interfaces;
 using ClinicManagement.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using ClinicManagement.Application.Dtos.Auth;
+using ClinicManagement.Domain.Enums;
 namespace ClinicManagement.API.Controllers
 {
     [ApiController]
@@ -31,7 +32,7 @@ namespace ClinicManagement.API.Controllers
             {
                 FullName = request.FullName,
                 Email = request.Email,
-                Role = "Patient",
+                Role = UserRole.Patient,
                 PhoneNumber = request.PhoneNumber
             };
 

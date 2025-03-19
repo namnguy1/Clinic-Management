@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClinicManagement.Domain.Entities
 {
@@ -20,5 +21,8 @@ namespace ClinicManagement.Domain.Entities
         public DateTime IssuedDate { get; set; } = DateTime.UtcNow;
 
         public string? InvoiceDetails { get; set; } // Nội dung hóa đơn
+
+        // Navigation property để truy xuất đối tượng PaymentTransaction (nếu có)
+        public PaymentTransaction? PaymentTransaction { get; set; }
     }
 }

@@ -12,7 +12,6 @@ namespace ClinicManagement.Domain.Entities
         [Key]
         public int DoctorId { get; set; }
 
-        [ForeignKey("User")]
         public int UserId { get; set; } // Liên kết với bảng Users
 
         [Required]
@@ -27,5 +26,10 @@ namespace ClinicManagement.Domain.Entities
         public string? ClinicAddress { get; set; } // Địa chỉ phòng khám (nếu có)
 
         public User? User { get; set; } // Navigation property
+
+        public List<Appointment>? Appointments { get; set; }
+
+        public List<MedicalRecord>? MedicalRecords { get; set; }
+
     }
 }
