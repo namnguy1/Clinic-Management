@@ -2,6 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using ClinicManagement.Application.Interfaces;
 using ClinicManagement.Domain.Entities;
 
@@ -10,11 +15,13 @@ namespace ClinicManagement.Application.Services
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IConfiguration _configuration;
         // Có thể inject các dịch vụ khác như IPasswordHasher, ITokenService,...
 
-        public AuthService(IUserRepository userRepository)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _configuration = configuration;
         }
 
         public async Task<User> RegisterAsync(User user, string password)
@@ -48,9 +55,26 @@ namespace ClinicManagement.Application.Services
 
         private string GenerateToken(User user)
         {
-            // Triển khai tạo JWT token dựa trên user info
-            // (Có thể dùng package Microsoft.IdentityModel.Tokens và System.IdentityModel.Tokens.Jwt)
-            return "generated-jwt-token";
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured")));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.FullName),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"] ?? "clinic-management-api",
+                audience: _configuration["Jwt:Audience"] ?? "clinic-management-client",
+                claims: claims,
+                expires: DateTime.Now.AddDays(7),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
