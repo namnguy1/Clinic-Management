@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ClinicManagement.Application.Interfaces;
 using ClinicManagement.Domain.Entities;
+using ClinicManagement.Application.Dtos.Appointment;
+using ClinicManagement.Domain.Enums;
 
 namespace ClinicManagement.API.Controllers
 {
@@ -45,11 +47,19 @@ namespace ClinicManagement.API.Controllers
         /// Tạo một cuộc hẹn mới
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> CreateAppointment([FromBody] Appointment appointment)
+        public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequest request)
         {
-            if (appointment == null)
+            if (request == null)
                 return BadRequest(new { Message = "Invalid appointment data" });
-
+            var appointment = new Appointment
+            {
+                PatientId = request.PatientId,
+                DoctorId = request.DoctorId,
+                AppointmentDate = request.AppointmentDate,
+                Description = request.Description,
+                Status = AppointmentStatus.Scheduled,    // ví dụ default
+                CreatedAt = DateTime.UtcNow
+            };
             var createdAppointment = await _appointmentService.CreateAppointmentAsync(appointment);
             return CreatedAtAction(nameof(GetAppointment), new { id = createdAppointment.AppointmentId }, createdAppointment);
         }
@@ -58,16 +68,17 @@ namespace ClinicManagement.API.Controllers
         /// Cập nhật thông tin cuộc hẹn
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAppointment(int id, [FromBody] Appointment appointment)
+        public async Task<IActionResult> UpdateAppointment(int id, [FromBody] UpdateAppointmentRequest request)
         {
-            if (id != appointment.AppointmentId)
-                return BadRequest(new { Message = "Appointment ID mismatch" });
+            var existingAppointment = await _appointmentService.GetAppointmentAsync(id);
+            if (existingAppointment == null) return NotFound();
+            existingAppointment.AppointmentDate = request.AppointmentDate;
+            existingAppointment.Description = request.Description;
+            existingAppointment.Status = request.Status;
+            existingAppointment.UpdatedAt = DateTime.UtcNow;
 
-            var updatedAppointment = await _appointmentService.UpdateAppointmentAsync(appointment);
-            if (updatedAppointment == null)
-                return NotFound(new { Message = "Appointment not found" });
-
-            return Ok(updatedAppointment);
+            var updated = await _appointmentService.UpdateAppointmentAsync(existingAppointment);
+            return Ok(updated);
         }
 
         /// <summary>
