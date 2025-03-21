@@ -20,7 +20,6 @@ namespace ClinicManagement.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto? request)
         {
-            // Kiểm tra null và các trường bắt buộc
             if (request == null ||
                 string.IsNullOrEmpty(request.Email) ||
                 string.IsNullOrEmpty(request.Password))
@@ -32,27 +31,31 @@ namespace ClinicManagement.API.Controllers
             {
                 FullName = request.FullName,
                 Email = request.Email,
-                Role = UserRole.Patient,
+                Role = UserRole.Patient,  // Nếu đăng ký mặc định là Patient
                 PhoneNumber = request.PhoneNumber
             };
 
-            // Gọi service để xử lý đăng ký
-            var registeredUser = await _authService.RegisterAsync(user, request.Password);
-            
-            // Nếu service trả về null, có thể nghĩa là email đã tồn tại hoặc lỗi khác
-            if (registeredUser == null)
+            try
             {
-                return BadRequest("Registration failed. Email might be already in use.");
+                var registeredUser = await _authService.RegisterAsync(user, request.Password, request);
+                if (registeredUser == null)
+                {
+                    return BadRequest("Registration failed. Email might be already in use.");
+                }
+                var response = new RegisterResponseDto
+                {
+                    FullName = registeredUser.FullName,
+                    Email = registeredUser.Email,
+                    PhoneNumber = registeredUser.PhoneNumber
+                };
+                return Ok(response);
             }
-            var response = new RegisterResponseDto
+            catch (Exception ex)
             {
-                FullName = registeredUser.FullName,
-                Email = registeredUser.Email,
-                PhoneNumber = registeredUser.PhoneNumber
-            };
-            // Trả về RegisterResponse
-            return Ok(response);
+                return BadRequest(new { Message = ex.Message });
+            }
         }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto? request)

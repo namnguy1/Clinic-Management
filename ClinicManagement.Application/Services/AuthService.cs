@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ClinicManagement.Application.Interfaces;
 using ClinicManagement.Domain.Entities;
+using ClinicManagement.Application.Dtos.Auth;
+using ClinicManagement.Domain.Enums;
 
 namespace ClinicManagement.Application.Services
 {
@@ -16,21 +18,44 @@ namespace ClinicManagement.Application.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
+
+        private readonly IPatientRepository _patientRepository;
         // Có thể inject các dịch vụ khác như IPasswordHasher, ITokenService,...
 
-        public AuthService(IUserRepository userRepository, IConfiguration configuration)
+        public AuthService(IUserRepository userRepository, IPatientRepository patientRepository,IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _patientRepository = patientRepository;
             _configuration = configuration;
         }
 
-        public async Task<User> RegisterAsync(User user, string password)
+        public async Task<User> RegisterAsync(User user, string password, RegisterRequestDto additionalInfo)
         {
-            // Xử lý hash password
+            // Hash mật khẩu
             user.PasswordHash = HashPassword(password);
+            user.DateCreated = DateTime.UtcNow;
+
+            // Lưu User vào DB
             await _userRepository.AddAsync(user);
+
+            // Nếu role là Patient, tạo thêm record trong bảng Patient
+            if (user.Role == UserRole.Patient)
+            {
+                var patient = new Patient
+                {
+                    UserId = user.UserId,
+                    InsuranceNumber = additionalInfo.InsuranceNumber,
+                    DateOfBirth = additionalInfo.DateOfBirth,
+                    Gender = additionalInfo.Gender ?? throw new ArgumentNullException(nameof(additionalInfo.Gender), "Gender cannot be null"), // Ensure Gender is not null
+                    Address = additionalInfo.Address
+                };
+
+                await _patientRepository.AddAsync(patient); // Giả sử bạn inject IPatientRepository
+            }
+
             return user;
         }
+
 
         public async Task<string> LoginAsync(string email, string password)
         {
