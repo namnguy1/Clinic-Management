@@ -25,6 +25,9 @@ namespace ClinicManagement.Infrastructure.ClinicDbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .Property(u => u.Role)
+                .HasConversion<string>(); // Lưu enum dưới dạng string
             // User - Doctor (1-1)
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Doctor)
