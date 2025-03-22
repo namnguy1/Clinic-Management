@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClinicManagement.Application.Dtos.MedicalRecord;
 using ClinicManagement.Application.Interfaces;
 using ClinicManagement.Domain.Entities;
 using ClinicManagement.Infrastructure.ClinicDbContexts;
@@ -69,7 +70,16 @@ namespace ClinicManagement.Infrastructure.Repositories
 
         public async Task UpdateAsync(MedicalRecord record)
         {
-            _context.MedicalRecords.Update(record);
+            var existingRecord = await _context.MedicalRecords.FirstOrDefaultAsync(m => m.RecordId == record.RecordId)
+                ?? throw new InvalidOperationException($"Medical record with ID {record.RecordId} not found.");
+
+            existingRecord.PatientId = record.PatientId;
+            existingRecord.DoctorId = record.DoctorId;
+            existingRecord.Diagnosis = record.Diagnosis;
+            existingRecord.TreatmentPlan = record.TreatmentPlan;
+            existingRecord.CreatedAt = record.CreatedAt;
+
+            _context.MedicalRecords.Update(existingRecord);
             await _context.SaveChangesAsync();
         }
     }

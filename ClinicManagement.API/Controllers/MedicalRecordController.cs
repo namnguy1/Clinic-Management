@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClinicManagement.Application.Dtos.MedicalRecord;
 using ClinicManagement.Application.Interfaces;
 using ClinicManagement.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +25,7 @@ namespace ClinicManagement.API.Controllers
         /// Lấy danh sách tất cả bệnh án
         /// </summary>
         [HttpGet]
-        [Authorize(Roles = "Doctor,Admin")] // Ví dụ, chỉ bác sĩ và admin có quyền xem toàn bộ
+        [Authorize(Roles = "Doctor")] // Ví dụ, chỉ bác sĩ và admin có quyền xem toàn bộ
         public async Task<IActionResult> GetAllMedicalRecords()
         {
             var records = await _medicalRecordService.GetAllMedicalRecordsAsync();
@@ -35,7 +36,7 @@ namespace ClinicManagement.API.Controllers
         /// Lấy chi tiết một bệnh án theo ID
         /// </summary>
         [HttpGet("{id}")]
-        [Authorize(Roles = "Doctor,Patient,Admin")]
+        [Authorize(Roles = "Doctor,Patient")]
         public async Task<IActionResult> GetMedicalRecord(int id)
         {
             try
@@ -53,13 +54,13 @@ namespace ClinicManagement.API.Controllers
         /// Tạo mới bệnh án
         /// </summary>
         [HttpPost]
-        [Authorize(Roles = "Doctor,Admin")]
-        public async Task<IActionResult> CreateMedicalRecord([FromBody] MedicalRecord record)
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> CreateMedicalRecord([FromBody] MedicalRecordCreateDTO recordDto)
         {
-            if (record == null)
+            if (recordDto == null)
                 return BadRequest(new { Message = "Invalid record data." });
 
-            var createdRecord = await _medicalRecordService.CreateMedicalRecordAsync(record);
+            var createdRecord = await _medicalRecordService.CreateMedicalRecordAsync(recordDto);
             return CreatedAtAction(nameof(GetMedicalRecord), new { id = createdRecord.RecordId }, createdRecord);
         }
 
@@ -67,15 +68,15 @@ namespace ClinicManagement.API.Controllers
         /// Cập nhật bệnh án
         /// </summary>
         [HttpPut("{id}")]
-        [Authorize(Roles = "Doctor,Admin")]
-        public async Task<IActionResult> UpdateMedicalRecord(int id, [FromBody] MedicalRecord record)
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> UpdateMedicalRecord(int id, [FromBody] MedicalRecordUpdateDTO recordDto)
         {
-            if (id != record.RecordId)
+            if (id != recordDto.RecordId)
                 return BadRequest(new { Message = "ID mismatch." });
 
             try
             {
-                var updatedRecord = await _medicalRecordService.UpdateMedicalRecordAsync(record);
+                var updatedRecord = await _medicalRecordService.UpdateMedicalRecordAsync(recordDto);
                 return Ok(updatedRecord);
             }
             catch (Exception ex)
@@ -88,7 +89,7 @@ namespace ClinicManagement.API.Controllers
         /// Xoá bệnh án
         /// </summary>
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")] // Chỉ admin có thể xoá
+        [Authorize(Roles = "Doctor")] // Chỉ admin có thể xoá
         public async Task<IActionResult> DeleteMedicalRecord(int id)
         {
             try
