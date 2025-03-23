@@ -4,6 +4,5 @@ namespace ClinicManagement.Domain.Enums
     {
         Patient,
         Doctor,
-        Staff
     }
 }
