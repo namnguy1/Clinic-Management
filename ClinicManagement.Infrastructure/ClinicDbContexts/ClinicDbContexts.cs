@@ -23,6 +23,17 @@ namespace ClinicManagement.Infrastructure.ClinicDbContexts
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
 
+        public DbSet<Specialty> Specialty { get; set; }
+
+        public DbSet<SpecialtyDoctor> SpecialtyDoctor { get; set; }
+
+        public DbSet<SpecialtyHospitalOrClinic> SpecialtyHospitalOrClinic { get; set; }
+
+        public DbSet<DoctorHospitalOrClinic> DoctorHospitalOrClinic { get; set; }
+
+        public DbSet<HospitalOrClinic> HospitalOrClinic { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -79,6 +90,51 @@ namespace ClinicManagement.Infrastructure.ClinicDbContexts
                 .WithMany()
                 .HasForeignKey(t => t.PatientId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            
+
+
+            // Specialty - Doctor (N-N)
+            modelBuilder.Entity<SpecialtyDoctor>()
+                .HasKey(sd => new { sd.SpecialtyId, sd.DoctorId });
+
+            modelBuilder.Entity<SpecialtyDoctor>()
+                .HasOne(sd => sd.Specialty)
+                .WithMany(s => s.SpecialtyDoctors)
+                .HasForeignKey(sd => sd.SpecialtyId);
+
+            modelBuilder.Entity<SpecialtyDoctor>()
+                .HasOne(sd => sd.Doctor)
+                .WithMany(d => d.SpecialtyDoctors)
+                .HasForeignKey(sd => sd.DoctorId);
+
+            // Specialty - HospitalOrClinic (N-N)
+            modelBuilder.Entity<SpecialtyHospitalOrClinic>()
+                .HasKey(sh => new { sh.SpecialtyId, sh.HospitalOrClinicId });
+
+            modelBuilder.Entity<SpecialtyHospitalOrClinic>()
+                .HasOne(sh => sh.Specialty)
+                .WithMany(s => s.SpecialtyHospitalOrClinics)
+                .HasForeignKey(sh => sh.SpecialtyId);
+
+            modelBuilder.Entity<SpecialtyHospitalOrClinic>()
+                .HasOne(sh => sh.HospitalOrClinic)
+                .WithMany(h => h.SpecialtyHospitalOrClinics)
+                .HasForeignKey(sh => sh.HospitalOrClinicId);
+
+            // Doctor - HospitalOrClinic (N-N)
+            modelBuilder.Entity<DoctorHospitalOrClinic>()
+                .HasKey(dh => new { dh.DoctorId, dh.HospitalOrClinicId });
+
+            modelBuilder.Entity<DoctorHospitalOrClinic>()
+                .HasOne(dh => dh.Doctor)
+                .WithMany(d => d.DoctorHospitalOrClinics)
+                .HasForeignKey(dh => dh.DoctorId);
+
+            modelBuilder.Entity<DoctorHospitalOrClinic>()
+                .HasOne(dh => dh.HospitalOrClinic)
+                .WithMany(h => h.DoctorHospitalOrClinics)
+                .HasForeignKey(dh => dh.HospitalOrClinicId);
 
             base.OnModelCreating(modelBuilder);
         }

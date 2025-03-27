@@ -31,5 +31,11 @@ namespace ClinicManagement.Domain.Entities
 
         public List<MedicalRecord>? MedicalRecords { get; set; }
 
+        // Nhiều-nhiều với Specialty
+        public List<SpecialtyDoctor> SpecialtyDoctors { get; set; } = new();
+
+        // Nhiều-nhiều với HospitalOrClinic
+        public List<DoctorHospitalOrClinic> DoctorHospitalOrClinics { get; set; } = new();
+
     }
 }
