@@ -4,6 +4,8 @@ using ClinicManagement.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using ClinicManagement.Application.Dtos.Auth;
 using ClinicManagement.Domain.Enums;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 namespace ClinicManagement.API.Controllers
 {
     [ApiController]
@@ -66,6 +68,34 @@ namespace ClinicManagement.API.Controllers
             }
 
             var token = await _authService.LoginAsync(request.Email, request.Password);
+            return Ok(new { Token = token });
+        }
+
+        [HttpGet("google-login")]
+        public IActionResult GoogleLogin()
+        {
+            var properties = new AuthenticationProperties { RedirectUri = "/api/auth/google-callback" };
+            return Challenge(properties, "Google");
+        }
+
+        [HttpGet("google-callback")]
+        public async Task<IActionResult> GoogleCallback()
+        {
+            var authenticateResult = await HttpContext.AuthenticateAsync("Google");
+            if (!authenticateResult.Succeeded)
+                return BadRequest("Google authentication failed");
+
+            var claims = authenticateResult.Principal.Claims;
+            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+                return BadRequest("Email not found in Google claims");
+
+            // Tìm hoặc tạo user từ thông tin Google
+            var user = await _authService.GetOrCreateGoogleUserAsync(email, name);
+            var token = await _authService.GenerateTokenAsync(user);
+
             return Ok(new { Token = token });
         }
     }

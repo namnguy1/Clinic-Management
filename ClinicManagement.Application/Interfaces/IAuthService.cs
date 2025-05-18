@@ -10,7 +10,9 @@ namespace ClinicManagement.Application.Interfaces
 {
     public interface IAuthService
     {
-        Task<User> RegisterAsync(User user, string password,RegisterRequestDto additionalInfo);
+        Task<User> RegisterAsync(User user, string password, RegisterRequestDto additionalInfo);
         Task<string> LoginAsync(string email, string password);
+        Task<User> GetOrCreateGoogleUserAsync(string email, string name);
+        Task<string> GenerateTokenAsync(User user);
     }
 }

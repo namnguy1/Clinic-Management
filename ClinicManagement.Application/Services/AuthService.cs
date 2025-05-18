@@ -67,6 +67,48 @@ namespace ClinicManagement.Application.Services
             return token;
         }
 
+        public async Task<User> GetOrCreateGoogleUserAsync(string email, string name)
+        {
+            try
+            {
+                // Tìm user theo email
+                var user = await _userRepository.GetByEmailAsync(email);
+                if (user != null)
+                    return user;
+
+                // Tạo user mới nếu chưa tồn tại
+                user = new User
+                {
+                    Email = email,
+                    FullName = name,
+                    Role = UserRole.Patient, // Mặc định là Patient
+                    DateCreated = DateTime.UtcNow
+                };
+
+                await _userRepository.AddAsync(user);
+                return user;
+            }
+            catch (InvalidOperationException)
+            {
+                // User không tồn tại, tạo mới
+                var user = new User
+                {
+                    Email = email,
+                    FullName = name,
+                    Role = UserRole.Patient,
+                    DateCreated = DateTime.UtcNow
+                };
+
+                await _userRepository.AddAsync(user);
+                return user;
+            }
+        }
+
+        public async Task<string> GenerateTokenAsync(User user)
+        {
+            return GenerateToken(user);
+        }
+
         private string HashPassword(string password)
         {
             // Ví dụ: sử dụng BCrypt, hoặc các phương pháp hash khác.

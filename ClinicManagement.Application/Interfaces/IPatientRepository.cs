@@ -8,7 +8,7 @@ namespace ClinicManagement.Application.Interfaces
 {
     public interface IPatientRepository
     {
-         Task<Patient> GetByIdAsync(int PatientId);
+        Task<Patient> GetByIdAsync(int PatientId);
         Task<Patient> GetByEmailAsync(string email);
         Task<IEnumerable<Patient>> GetAllAsync();
         Task AddAsync(Patient patient);
